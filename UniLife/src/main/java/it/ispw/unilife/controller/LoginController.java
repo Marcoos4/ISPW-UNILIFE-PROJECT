@@ -16,9 +16,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Controller per il login e registrazione.
- */
+
 public class LoginController {
 
     private static final Logger LOGGER = Logger.getLogger(LoginController.class.getName());
@@ -91,10 +89,10 @@ public class LoginController {
         try {
             UserDAO userDao = DAOFactory.getDAOFactory().getUserDAO();
 
-            // Converti Bean in Model
+
             User user = convertBeanToModel(userBean);
 
-            // Registra
+
             userDao.insert(user);
 
             LOGGER.info("Utente registrato: " + userBean.getUserName());
@@ -141,9 +139,7 @@ public class LoginController {
         return userBean;
     }
 
-    /**
-     * Converte UserBean in User Model con le credenziali.
-     */
+
     private User convertBeanToModel(UserBean bean) throws UserNotFoundException, DAOException {
 
         String username = bean.getUserName();
