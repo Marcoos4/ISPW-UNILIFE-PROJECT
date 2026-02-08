@@ -30,7 +30,6 @@ public class SearchTutorCLIView extends CLIView {
     }
 
     public void promptDate() { System.out.print("Enter date (dd/MM/yyyy, or press Enter to skip): "); }
-    public void promptMaxPrice() { System.out.print("Enter max price (or press Enter to skip): "); }
 
     public void showLessonList(List<LessonBean> lessons) {
         System.out.println("\n--- Tutor Available ---");

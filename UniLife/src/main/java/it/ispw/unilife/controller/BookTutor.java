@@ -4,6 +4,7 @@ import it.ispw.unilife.bean.*;
 import it.ispw.unilife.boundary.StripeBoundary;
 import it.ispw.unilife.dao.ReservationDAO;
 import it.ispw.unilife.dao.factory.DAOFactory;
+import it.ispw.unilife.enums.LessonStatus;
 import it.ispw.unilife.enums.PaymentStatus;
 import it.ispw.unilife.enums.ReservationStatus;
 import it.ispw.unilife.exception.DAOException;
@@ -45,42 +46,71 @@ public class BookTutor {
     }
 
     public List<LessonBean> filterTutor(FilterTutorBean filter) throws DAOException {
+        List<Lesson> lessons = fetchAllLessons();
+        List<Reservation> reservations = fetchAllReservations();
 
-        List<Lesson> lessons = null;
-        List<Reservation> reservations = null;
-        try {
-            lessons = DAOFactory.getDAOFactory().getLessonDAO().getAll();
-            reservations = DAOFactory.getDAOFactory().getReservationDAO().getAll();
-        } catch (UserNotFoundException e) {
-            throw new DAOException("Errore nel recupero delle materie: " + e.getMessage());
-        }
-        assert lessons != null;
-        assert reservations != null;
         List<LessonBean> lessonBeans = new ArrayList<>();
 
         for (Lesson lesson : lessons) {
-            // Nota: Assicurati che il metodo retrieveAvailability dentro Lesson gestisca
-            // correttamente i parametri null o <= 0 per ignorare quel filtro specifico.
-            if (lesson.retrieveAvailability(filter.getStart(), filter.getEnd(), filter.getSubject(), filter.getAmount())) {
-                boolean isReserved = false;
-
-                // Controlla se la lezione è già prenotata
-                for (Reservation reservation : reservations) {
-                    Lesson resLesson = reservation.checkLesson();
-                    if (resLesson != null &&
-                            resLesson.getTutor().getUsername().equals(lesson.getTutor().getUsername()) &&
-                            resLesson.getStartTime().equals(lesson.getStartTime())) {
-                        isReserved = true;
-                        break;
-                    }
-                }
-
-                if (!isReserved) {
-                    lessonBeans.add(convertToLessonBean(lesson));
-                }
+            if (isLessonEligible(lesson, filter, reservations)) {
+                lessonBeans.add(convertToLessonBean(lesson));
             }
         }
+
         return lessonBeans;
+    }
+
+    private List<Lesson> fetchAllLessons() throws DAOException {
+        try {
+            List<Lesson> lessons = DAOFactory.getDAOFactory().getLessonDAO().getAll();
+            assert lessons != null;
+            return lessons;
+        } catch (UserNotFoundException e) {
+            throw new DAOException("Errore nel recupero delle lezioni: " + e.getMessage());
+        }
+    }
+
+    private List<Reservation> fetchAllReservations() throws DAOException {
+        try {
+            List<Reservation> reservations = DAOFactory.getDAOFactory().getReservationDAO().getAll();
+            assert reservations != null;
+            return reservations;
+        } catch (UserNotFoundException e) {
+            throw new DAOException("Errore nel recupero delle prenotazioni: " + e.getMessage());
+        }
+    }
+
+    private boolean isLessonEligible(Lesson lesson, FilterTutorBean filter, List<Reservation> reservations) {
+        if (!isLessonAvailableAndAccepted(lesson, filter)) {
+            return false;
+        }
+
+        return !isLessonAlreadyReserved(lesson, reservations);
+    }
+
+    private boolean isLessonAvailableAndAccepted(Lesson lesson, FilterTutorBean filter) {
+        return lesson.retrieveAvailability(filter.getStart(), filter.getEnd(), filter.getSubject(), filter.getAmount())
+                && lesson.getStatus().equals(LessonStatus.ACCEPTED);
+    }
+
+    private boolean isLessonAlreadyReserved(Lesson lesson, List<Reservation> reservations) {
+        for (Reservation reservation : reservations) {
+            if (isReservationForLesson(reservation, lesson)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isReservationForLesson(Reservation reservation, Lesson lesson) {
+        Lesson resLesson = reservation.checkLesson();
+
+        if (resLesson == null) {
+            return false;
+        }
+
+        return resLesson.getTutor().getUsername().equals(lesson.getTutor().getUsername())
+                && resLesson.getStartTime().equals(lesson.getStartTime());
     }
 
     public ReservationBean startReservationProcedure(TokenBean tokenBean, LessonBean lessonBean) throws InvalidTokenException {

@@ -5,7 +5,6 @@ import it.ispw.unilife.bean.UserBean;
 import it.ispw.unilife.controller.LoginController;
 import it.ispw.unilife.exception.ExternalAuthenticationException;
 import it.ispw.unilife.exception.LoginException;
-import it.ispw.unilife.exception.UserNotFoundException;
 import it.ispw.unilife.view.viewcli.LoginCLIView;
 
 import java.util.Scanner;
@@ -53,10 +52,6 @@ public class LoginCLIController implements CLIContoller {
                 case "1":
                     return performCredentialLogin(scanner);
                 case "2":
-                    return performExternalLogin("Github");
-                case "3":
-                    return performExternalLogin("Google");
-                case "4":
                     new HomeCLIController().start(scanner);
                     return null;
                 default:
@@ -84,11 +79,6 @@ public class LoginCLIController implements CLIContoller {
         bean.setPassword(pass);
 
         return loginController.login(bean);
-    }
-
-    // Metodo helper per il login esterno
-    private TokenBean performExternalLogin(String provider) throws ExternalAuthenticationException, UserNotFoundException {
-        return loginController.externalLogin(provider);
     }
 
     // Estrazione della logica di routing

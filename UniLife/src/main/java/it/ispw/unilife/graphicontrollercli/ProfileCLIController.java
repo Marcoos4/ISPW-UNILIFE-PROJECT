@@ -17,7 +17,9 @@ public class ProfileCLIController implements CLIContoller {
     private final ProfileCLIView view = new ProfileCLIView();
     private final TokenBean tokenBean;
     private final NotificationSystem notificationService = NotificationSystem.getInstance();
+    private final LoginController loginController = new LoginController();
     private List<NotificationBean> notifications;
+    private String currentUserRole;
 
     public ProfileCLIController(TokenBean tokenBean) {
         this.tokenBean = tokenBean;
@@ -27,12 +29,12 @@ public class ProfileCLIController implements CLIContoller {
     public void start(Scanner scanner) {
         view.showHeader();
 
-        // Load user profile
-        LoginController loginController = new LoginController();
+        // Load user profile and role ONCE
         UserBean user = loginController.getProfile(tokenBean);
-        String role = loginController.findUserRole(tokenBean).getRole();
+        currentUserRole = loginController.findUserRole(tokenBean).getRole();
+
         if (user != null) {
-            view.showUserInfo(user, role);
+            view.showUserInfo(user, currentUserRole);
         }
 
         // Load notifications
@@ -80,49 +82,76 @@ public class ProfileCLIController implements CLIContoller {
             }
 
             NotificationBean notif = notifications.get(num - 1);
-            onOpenNotification(notif, scanner);
+
+            // Check if notification can be opened
+            if (canOpenNotification(notif)) {
+                onOpenNotification(notif, scanner);
+            } else {
+                view.showMessage("This notification cannot be opened.");
+                // Return to profile page (restart the menu loop)
+            }
 
         } catch (NumberFormatException e) {
             view.showError("Invalid input.");
         }
     }
 
+    /**
+     * Determines if a notification can be opened based on type, role, and status.
+     * Mirrors the logic from ProfileFXController.shouldShowOpenButton()
+     */
+    private boolean canOpenNotification(NotificationBean notif) {
+        String type = notif.getNotificationType();
+
+        // Students cannot open APPLICATION notifications
+        if ("APPLICATION".equalsIgnoreCase(type) && "Student".equalsIgnoreCase(currentUserRole)) {
+            return false;
+        }
+
+        // Tutors cannot open LESSON notifications
+        if ("LESSON".equalsIgnoreCase(type) && "Tutor".equalsIgnoreCase(currentUserRole)) {
+            return false;
+        }
+
+        // Check if RESERVATION is cancelled/rejected for Students
+        if ("RESERVATION".equalsIgnoreCase(type) && "Student".equalsIgnoreCase(currentUserRole)) {
+            return !isReservationCancelledOrRejected(notif);
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if a reservation notification has been cancelled or rejected.
+     * Mirrors the logic from ProfileFXController.checkAndUpdateReservationStatus()
+     */
+    private boolean isReservationCancelledOrRejected(NotificationBean notif) {
+        try {
+            ReservationBean resBean = notificationService.resolveReservationNotification(notif, tokenBean);
+
+            if (resBean != null) {
+                String realStatus = resBean.getStatus();
+                return "CANCELLED".equalsIgnoreCase(realStatus) || "REJECTED".equalsIgnoreCase(realStatus);
+            }
+        } catch (DAOException e) {
+            logger.log(Level.SEVERE, "Error checking reservation status", e);
+        }
+        return false;
+    }
+
     private void onOpenNotification(NotificationBean notif, Scanner scanner) {
         try {
             switch (notif.getNotificationType()) {
                 case "RESERVATION":
-                    ReservationBean reservationBean = notificationService.resolveReservationNotification(notif, tokenBean);
-                    switch (reservationBean.getStatus()) {
-                        case "Pending":
-                            new LessonRequestCLIController(tokenBean, notif).start(scanner);
-                            break;
-                        case "Confirmed":
-                            new PaymentCLIController(tokenBean, notif).start(scanner);
-                            break;
-                        default:
-                            view.showMessage("Reservation status: " + reservationBean.getStatus());
-                            break;
-                    }
+                    handleReservationNotification(notif, scanner);
                     break;
 
                 case "APPLICATION":
-                    ApplicationBean appBean = notificationService.resolveApplicationNotification(notif, tokenBean);
-                    if (appBean != null) {
-                        LoginController loginController = new LoginController();
-                        String currentUserRole = loginController.findUserRole(tokenBean).getRole();
-
-                        if ("UNIVERSITY_EMPLOYEE".equalsIgnoreCase(currentUserRole) || "University_employee".equalsIgnoreCase(currentUserRole)) {
-                            new EvaluateApplicationCLIController(tokenBean, appBean).start(scanner);
-                        } else {
-                            view.showMessage("Application Status: " + appBean.getStatus());
-                        }
-                    } else {
-                        view.showError("Unable to retrieve application details.");
-                    }
+                    handleApplicationNotification(notif, scanner);
                     break;
 
                 case "LESSON":
-                    new EvaluateLessonCLIController(tokenBean, notif).start(scanner);
+                    handleLessonNotification(notif, scanner);
                     break;
 
                 case "COURSE":
@@ -139,6 +168,50 @@ public class ProfileCLIController implements CLIContoller {
         } catch (DAOException e) {
             logger.log(Level.SEVERE, "Error opening notification", e);
             view.showError("Error opening notification.");
+        }
+    }
+
+    private void handleReservationNotification(NotificationBean notif, Scanner scanner) throws DAOException {
+        ReservationBean reservationBean = notificationService.resolveReservationNotification(notif, tokenBean);
+
+        switch (reservationBean.getStatus()) {
+            case "Pending":
+                new LessonRequestCLIController(tokenBean, notif).start(scanner);
+                break;
+            case "Confirmed":
+                new PaymentCLIController(tokenBean, notif).start(scanner);
+                break;
+            case "CANCELLED", "REJECTED":
+                view.showMessage("Reservation status: " + reservationBean.getStatus());
+                view.showMessage("This reservation cannot be opened.");
+                break;
+            default:
+                view.showMessage("Reservation status: " + reservationBean.getStatus());
+                break;
+        }
+    }
+
+    private void handleApplicationNotification(NotificationBean notif, Scanner scanner) throws DAOException {
+        ApplicationBean appBean = notificationService.resolveApplicationNotification(notif, tokenBean);
+
+        if (appBean != null) {
+            if ("UNIVERSITY_EMPLOYEE".equalsIgnoreCase(currentUserRole) || "University_employee".equalsIgnoreCase(currentUserRole)) {
+                new EvaluateApplicationCLIController(tokenBean, appBean).start(scanner);
+            } else {
+                // Student viewing their own application
+                view.showMessage("Application Status: " + appBean.getStatus());
+                view.showMessage("This notification is for information only and cannot be opened.");
+            }
+        } else {
+            view.showError("Unable to retrieve application details.");
+        }
+    }
+
+    private void handleLessonNotification(NotificationBean notif, Scanner scanner) {
+        if ("Tutor".equalsIgnoreCase(currentUserRole)) {
+            view.showMessage("This notification cannot be opened by tutors.");
+        } else {
+            new EvaluateLessonCLIController(tokenBean, notif).start(scanner);
         }
     }
 }

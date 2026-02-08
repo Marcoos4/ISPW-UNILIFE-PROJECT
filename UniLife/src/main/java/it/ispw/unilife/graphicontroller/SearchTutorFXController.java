@@ -41,7 +41,6 @@ public class SearchTutorFXController {
 
     // MODIFICA: ComboBox invece di TextField
     @FXML private ComboBox<String> cmbSubject;
-    @FXML private TextField txtAmount;
     @FXML private DatePicker pickerDate;
 
     @FXML private VBox tutorListContainer;
@@ -80,18 +79,7 @@ public class SearchTutorFXController {
             filter.setSubject(selectedSubject);
         }
 
-        // 2. Mappatura Amount (Prezzo massimo)
-        if (txtAmount.getText() != null && !txtAmount.getText().trim().isEmpty()) {
-            try {
-                float amount = Float.parseFloat(txtAmount.getText().trim());
-                filter.setAmount(amount);
-            } catch (NumberFormatException e) {
-                // In caso di errore mostriamo un alert e non applichiamo filtri errati
-                Alert alert = new Alert(Alert.AlertType.WARNING, "Inserisci un prezzo valido (es. 30.0)", ButtonType.OK);
-                alert.showAndWait();
-                return;
-            }
-        }
+        filter.setAmount(0);
 
         // 3. Mappatura Date (Start & End)
         if (pickerDate.getValue() != null) {

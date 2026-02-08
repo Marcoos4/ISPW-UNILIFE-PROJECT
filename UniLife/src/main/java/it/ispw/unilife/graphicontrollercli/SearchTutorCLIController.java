@@ -98,17 +98,7 @@ public class SearchTutorCLIController implements CLIContoller {
                 view.showError("Invalid date format. Skipping date filter.");
             }
         }
-
-        // Max price
-        view.promptMaxPrice();
-        String priceStr = scanner.nextLine().trim();
-        if (!priceStr.isEmpty()) {
-            try {
-                filter.setAmount(Float.parseFloat(priceStr));
-            } catch (NumberFormatException e) {
-                view.showError("Invalid price format. Skipping price filter.");
-            }
-        }
+        filter.setAmount(0);
 
         loadLessons(filter);
     }

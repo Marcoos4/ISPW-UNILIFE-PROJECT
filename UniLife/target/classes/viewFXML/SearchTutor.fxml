@@ -7,7 +7,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.ispw.unilife.graphicontroller.SearchTutorFXController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.ispw.unilife.graphicontroller.SearchTutorFXController">
 
     <top>
         <VBox style="-fx-padding: 20 20 0 20;">
@@ -62,23 +61,20 @@
                 <Separator />
 
                 <VBox spacing="5">
-                    <Label text="Subject:" style="-fx-font-weight: bold;"/>
-                    <ComboBox fx:id="cmbSubject" promptText="Select Subject" maxWidth="Infinity" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                    <Label style="-fx-font-weight: bold;" text="Subject:" />
+                    <ComboBox fx:id="cmbSubject" maxWidth="Infinity" promptText="Select Subject" style="-fx-background-color: white; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-radius: 5;" />
                 </VBox>
 
                 <VBox spacing="5">
-                    <Label text="Date:" style="-fx-font-weight: bold;"/>
+                    <Label style="-fx-font-weight: bold;" text="Date:" />
                     <DatePicker fx:id="pickerDate" maxWidth="Infinity" promptText="Select Date" style="-fx-background-radius: 8;" />
                 </VBox>
 
-                <VBox spacing="5">
-                    <Label text="Max Price (€):" style="-fx-font-weight: bold;"/>
-                    <TextField fx:id="txtAmount" promptText="Es. 30.0" style="-fx-background-radius: 8;" />
-                </VBox>
+                <VBox spacing="5" />
 
                 <Region prefHeight="20.0" />
 
-                <Button fx:id="btnApplyFilters" onAction="#onApplyFilters" maxWidth="Infinity" style="-fx-background-color: #ff9933; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Apply Filters">
+                <Button fx:id="btnApplyFilters" maxWidth="Infinity" onAction="#onApplyFilters" style="-fx-background-color: #ff9933; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;" text="Apply Filters">
                     <font><Font size="14.0" /></font>
                 </Button>
             </children>

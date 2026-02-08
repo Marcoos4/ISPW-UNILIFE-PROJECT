@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class GithubAuthBoundary {
 
-    private static final String CLIENT_ID = "ID";
+    private static final String CLIENT_ID = "id";
     private static final String CLIENT_SECRET = "secret";
 
     // Assicurati che questo URL sia identico a quello registrato su GitHub Developer Settings

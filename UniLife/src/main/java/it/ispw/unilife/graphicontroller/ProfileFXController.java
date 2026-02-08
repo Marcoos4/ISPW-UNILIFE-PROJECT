@@ -89,17 +89,50 @@ public class ProfileFXController {
         }
     }
 
-    // Aggiunto parametro String userRole
+    // =================================================================================
+    // METODO PRINCIPALE (PULITO)
+    // =================================================================================
     private HBox createNotificationCard(NotificationBean notif, String userRole) {
+        HBox card = setupCardLayout();
+
+        // 1. Crea la label dello status base
+        Label lblStatus = createStatusLabel(notif.getStatus());
+
+        // 2. Crea il box con i testi
+        VBox textBox = createTextBox(notif, lblStatus);
+        card.getChildren().add(textBox);
+
+        // 3. Verifica se è una prenotazione cancellata (Logica complessa estratta)
+        boolean isCancelledReservation = checkAndUpdateReservationStatus(notif, userRole, lblStatus);
+
+        // 4. Aggiungi il bottone se necessario
+        if (shouldShowOpenButton(notif.getNotificationType(), userRole, isCancelledReservation)) {
+            card.getChildren().add(createOpenButton(notif));
+        }
+
+        return card;
+    }
+
+    // =================================================================================
+    // METODI HELPER (LOGICA ESTRATTA)
+    // =================================================================================
+
+    // Helper 1: Setup grafico della card
+    private HBox setupCardLayout() {
         HBox card = new HBox();
         card.setAlignment(Pos.CENTER_LEFT);
         card.setStyle("-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0); -fx-padding: 15; -fx-background-radius: 5;");
+        return card;
+    }
 
+    // Helper 2: Creazione del contenuto testuale
+    private VBox createTextBox(NotificationBean notif, Label lblStatus) {
         VBox textBox = new VBox(5.0);
         HBox.setHgrow(textBox, Priority.ALWAYS);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String timeStr = notif.getTimestamp() != null ? notif.getTimestamp().format(formatter) : "--";
+
         Label lblTime = new Label(timeStr);
         lblTime.setTextFill(Color.web("#ff9933"));
         lblTime.setFont(new Font(12.0));
@@ -114,37 +147,79 @@ public class ProfileFXController {
         lblType.setTextFill(Color.web("#999"));
         lblType.setFont(new Font(11.0));
 
-        Label lblStatus = new Label("Status: " + notif.getStatus());
-        lblStatus.setFont(new Font(11.0));
-        lblStatus.setTextFill("Pending".equals(notif.getStatus()) ? Color.web("#cc6600") : Color.web("#339933"));
-
         textBox.getChildren().addAll(lblTime, lblFrom, lblMsg, lblType, lblStatus);
-        card.getChildren().add(textBox);
-
-        // --- MODIFICA: Uso il parametro userRole passato, niente chiamate al DB qui ---
-        String type = notif.getNotificationType();
-
-        // Logica corretta con equalsIgnoreCase
-        boolean isStudentApp = "APPLICATION".equals(type) && "Student".equalsIgnoreCase(userRole);
-        boolean isTutorLesson = "LESSON".equals(type) && "Tutor".equalsIgnoreCase(userRole);
-
-        // Mostra il bottone solo se NON è uno dei casi da bloccare
-        if (!isStudentApp && !isTutorLesson) {
-            Button btnOpen = new Button("Open");
-            btnOpen.setStyle("-fx-background-color: #ff9933; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;");
-            btnOpen.setOnAction(e -> {
-                try {
-                    onOpenNotification(notif, e);
-                } catch (DAOException ex) {
-                    logger.log(Level.SEVERE, "Errore nel caricamento delle notifiche", ex);
-                }
-            });
-            card.getChildren().add(btnOpen);
-        }
-        // -----------------------------------------------------------------------------
-
-        return card;
+        return textBox;
     }
+
+    // Helper 3: Creazione e colorazione della Label Status
+    private Label createStatusLabel(String status) {
+        Label lblStatus = new Label("Status: " + status);
+        lblStatus.setFont(new Font(11.0));
+        updateStatusLabelStyle(lblStatus, status);
+        return lblStatus;
+    }
+
+    // Helper 4: Applica il colore in base al testo dello status
+    private void updateStatusLabelStyle(Label label, String status) {
+        if ("Pending".equalsIgnoreCase(status)) {
+            label.setTextFill(Color.web("#cc6600"));
+        } else if ("Confirmed".equalsIgnoreCase(status) || "Approved".equalsIgnoreCase(status)) {
+            label.setTextFill(Color.web("#339933"));
+        } else if ("Cancelled".equalsIgnoreCase(status) || "Rejected".equalsIgnoreCase(status)) {
+            label.setTextFill(Color.RED);
+        } else {
+            label.setTextFill(Color.BLACK);
+        }
+    }
+
+    // Helper 5: Logica complessa del Reservation Bean (DB Call)
+    // Ritorna true se la prenotazione risulta cancellata
+    private boolean checkAndUpdateReservationStatus(NotificationBean notif, String userRole, Label lblStatus) {
+        if (!"RESERVATION".equalsIgnoreCase(notif.getNotificationType()) || !"Student".equalsIgnoreCase(userRole)) {
+            return false;
+        }
+
+        try {
+            TokenBean token = Navigator.getInstance().getCurrentToken();
+            ReservationBean resBean = notificationSystem.resolveReservationNotification(notif, token);
+
+            if (resBean != null) {
+                String realStatus = resBean.getStatus();
+                if ("CANCELLED".equalsIgnoreCase(realStatus) || "REJECTED".equalsIgnoreCase(realStatus)) {
+                    // Aggiorniamo la label grafica già che ci siamo
+                    lblStatus.setText("Status: " + realStatus);
+                    updateStatusLabelStyle(lblStatus, realStatus);
+                    return true;
+                }
+            }
+        } catch (DAOException e) {
+            logger.log(Level.SEVERE, "Impossibile verificare lo stato della prenotazione", e);
+        }
+        return false;
+    }
+
+    // Helper 6: Logica booleana pura per la visibilità del bottone
+    private boolean shouldShowOpenButton(String type, String userRole, boolean isCancelledReservation) {
+        boolean isStudentApp = "APPLICATION".equalsIgnoreCase(type) && "Student".equalsIgnoreCase(userRole);
+        boolean isTutorLesson = "LESSON".equalsIgnoreCase(type) && "Tutor".equalsIgnoreCase(userRole);
+
+        return !isStudentApp && !isTutorLesson && !isCancelledReservation;
+    }
+
+    // Helper 7: Creazione del bottone
+    private Button createOpenButton(NotificationBean notif) {
+        Button btnOpen = new Button("Open");
+        btnOpen.setStyle("-fx-background-color: #ff9933; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-cursor: hand;");
+        btnOpen.setOnAction(e -> {
+            try {
+                onOpenNotification(notif, e);
+            } catch (DAOException ex) {
+                logger.log(Level.SEVERE, "Errore apertura notifica", ex);
+            }
+        });
+        return btnOpen;
+    }
+
     private void onOpenNotification(NotificationBean notif, ActionEvent event) throws DAOException {
         TokenBean tokenBean = Navigator.getInstance().getCurrentToken();
 

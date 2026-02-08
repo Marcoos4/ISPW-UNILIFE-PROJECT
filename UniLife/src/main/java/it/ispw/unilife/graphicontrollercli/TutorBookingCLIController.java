@@ -46,7 +46,7 @@ public class TutorBookingCLIController implements CLIContoller {
                     flag = false;
                     break;
                 case "2":
-                    view.showMessage("Not Implementing");
+                    view.showMessage("Not Implemented");
                     break;
                 case "3":
                     flag = false;
