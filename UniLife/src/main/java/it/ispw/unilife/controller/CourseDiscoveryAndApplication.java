@@ -63,7 +63,7 @@ public class CourseDiscoveryAndApplication {
             return new ArrayList<>();
         }
 
-        String searchString = bean.getCourseType() != null ? bean.getCourseType().trim().toLowerCase() : "";
+        String searchString = bean.getTitle() != null ? bean.getTitle().trim().toLowerCase() : "";
         List<CourseBean> resultList = new ArrayList<>();
 
         try {
