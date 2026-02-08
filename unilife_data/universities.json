@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Sapienza Università di Roma",
+    "location": "Roma",
+    "ranking": 134,
+    "livingCosts": 850.0
+  },
+  {
+    "name": "Politecnico di Milano",
+    "location": "Milano",
+    "ranking": 123,
+    "livingCosts": 1200.50
+  },
+  {
+    "name": "Università di Bologna",
+    "location": "Bologna",
+    "ranking": 160,
+    "livingCosts": 900.0
+  },
+  {
+    "name": "Massachusetts Institute of Technology (MIT)",
+    "location": "Cambridge, MA",
+    "ranking": 1,
+    "livingCosts": 2500.0
+  },
+  {
+    "name": "University of Oxford",
+    "location": "Oxford",
+    "ranking": 4,
+    "livingCosts": 1600.0
+  },
+  {
+    "name": "Università degli Studi di Napoli Federico II",
+    "location": "Napoli",
+    "ranking": 350,
+    "livingCosts": 700.0
+  }
+]
