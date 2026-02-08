@@ -1,0 +1,36 @@
+# Ignora il file con le chiavi segrete di Google/GitHub
+client_secret.json
+src/main/resources/client_secrets.json
+credentials.json
+src/main/resources/dp.properties
+
+# Ignora la cartella dove vengono salvati i login attivi (sessioni utente)
+tokens/
+src/main/resources/tokens/
+StoredCredential/
+
+# Cartella di output della compilazione (da non committare mai)
+target/
+
+# File compilati e log
+*.class
+*.log
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Ignora le impostazioni locali dell'editor
+.idea/
+*.iml
+*.iws
+out/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
