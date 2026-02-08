@@ -17,21 +17,17 @@ import java.net.http.HttpResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Boundary per l'interazione con l'API OAuth di GitHub.
- */
 public class GithubAuthBoundary {
 
     private static final String CLIENT_ID = "id";
     private static final String CLIENT_SECRET = "secret";
 
-    // Assicurati che questo URL sia identico a quello registrato su GitHub Developer Settings
     private static final String REDIRECT_URI = "http://localhost:8080/callback";
 
     private static final String AUTH_URL = "https://github.com/login/oauth/authorize?client_id=" + CLIENT_ID
             + "&redirect_uri=" + REDIRECT_URI + "&scope=user:email";
 
-    // Unica istanza condivisa (Thread-safe e ottimizzata)
+
     private static final HttpClient client = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .followRedirects(HttpClient.Redirect.NORMAL)
@@ -39,13 +35,8 @@ public class GithubAuthBoundary {
 
     private String capturedCode = null;
 
-    /**
-     * Apre la finestra di login GitHub e cattura il codice di autorizzazione.
-     *
-     * @return il codice di autorizzazione, o null se l'utente chiude la finestra senza login
-     */
     public String getAuthorizationCode() {
-        // Pulisce i cookie precedenti per forzare il ri-login se necessario
+
         CookieHandler.setDefault(new CookieManager());
 
         WebView webView = new WebView();
@@ -56,13 +47,12 @@ public class GithubAuthBoundary {
         stage.setTitle("Login con GitHub");
         stage.setScene(new Scene(webView, 600, 700));
 
-        // Listener per intercettare il redirect contenente il codice
+
         engine.locationProperty().addListener((obs, oldUrl, newUrl) -> {
             if (newUrl != null && newUrl.contains("code=")) {
-                // Estrarre il codice dall'URL (es: http://localhost/callback?code=XYZ&...)
                 String[] parts = newUrl.split("code=");
                 if (parts.length > 1) {
-                    this.capturedCode = parts[1].split("&")[0]; // Prende tutto prima dell'eventuale altro parametro
+                    this.capturedCode = parts[1].split("&")[0]; 
                     stage.close();
                 }
             }
@@ -74,16 +64,14 @@ public class GithubAuthBoundary {
         return this.capturedCode;
     }
 
-    /**
-     * Scambia il codice di autorizzazione per un access token.
-     */
+
     public String exchangeCodeForToken(String code) throws IOException, InterruptedException, ExternalAuthenticationException {
 
         String params = "client_id=" + CLIENT_ID + "&client_secret=" + CLIENT_SECRET + "&code=" + code;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://github.com/login/oauth/access_token"))
-                .header("Accept", "application/json") // Chiediamo esplicitamente JSON
+                .header("Accept", "application/json") 
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .POST(HttpRequest.BodyPublishers.ofString(params))
                 .build();
@@ -97,16 +85,13 @@ public class GithubAuthBoundary {
         String accessToken = extractJsonValue(response.body(), "access_token");
 
         if (accessToken == null) {
-            // Se GitHub restituisce un JSON di errore (es. "error": "bad_verification_code")
+
             throw new ExternalAuthenticationException("Impossibile ottenere il token. Risposta GitHub: " + response.body());
         }
 
         return accessToken;
     }
 
-    /**
-     * Recupera il profilo utente da GitHub usando il token.
-     */
     public String fetchUserProfile(String accessToken) throws IOException, InterruptedException, ExternalAuthenticationException {
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -125,13 +110,9 @@ public class GithubAuthBoundary {
         return response.body();
     }
 
-    /**
-     * Utility per estrarre valori da JSON semplice senza librerie esterne.
-     * Nota: Per progetti reali complessi, meglio usare Jackson o Gson.
-     */
+
     private String extractJsonValue(String json, String key) {
         if (json == null) return null;
-        // Regex semplice per trovare "chiave":"valore"
         Matcher matcher = Pattern.compile("\"" + key + "\":\\s*\"([^\"]+)\"").matcher(json);
         return matcher.find() ? matcher.group(1) : null;
     }
