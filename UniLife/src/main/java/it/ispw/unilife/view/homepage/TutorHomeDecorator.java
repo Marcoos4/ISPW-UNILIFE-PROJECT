@@ -9,10 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-/**
- * Tutor home page decorator.
- * Shows Add Lesson and Show new Notifications buttons.
- */
+
 public class TutorHomeDecorator extends HomePageDecorator {
 
     private static final String BUTTON_STYLE = "-fx-background-color: #ff9933; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;";
@@ -38,7 +35,7 @@ public class TutorHomeDecorator extends HomePageDecorator {
 
     @Override
     public void decorateHeader(HBox headerArea) {
-        // Header decoration is handled by HomeFXController
+
     }
 
     @Override

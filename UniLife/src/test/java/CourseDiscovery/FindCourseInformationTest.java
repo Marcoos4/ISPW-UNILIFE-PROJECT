@@ -47,24 +47,24 @@ class FindCourseInformationTest {
 
     @Test
     void testFindCourseInformationReturnsCorrectDetails() {
-        // Arrange
+
         CourseBean input = new CourseBean();
         input.setTitle("Medicine");
         UniversityBean uniBean = new UniversityBean();
         uniBean.setName("Humanitas");
         input.setUniversity(uniBean);
 
-        // Act
+
         CourseBean result = controller.findCourseInformation(input);
 
-        // Assert
+
         assertNotNull(result);
         assertEquals("Medicine", result.getTitle());
         assertEquals("Humanitas", result.getUniversity().getName());
         assertEquals(2500.0, result.getUniversity().getLivingCosts());
     }
 
-    // --- Stub Setup ---
+
     private void injectStubFactory(List<Course> courses) throws Exception {
         Field instance = DAOFactory.class.getDeclaredField("instance");
         instance.setAccessible(true);

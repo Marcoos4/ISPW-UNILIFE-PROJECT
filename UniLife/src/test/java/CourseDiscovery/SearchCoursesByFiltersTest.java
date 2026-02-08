@@ -52,19 +52,19 @@ class SearchCoursesByFiltersTest {
 
     @Test
     void testSearchCoursesByFiltersMatchesLanguage() {
-        // Arrange
+
         FilterCourseBean filter = new FilterCourseBean();
         filter.setLanguageOfInstruction("English");
 
-        // Act
+
         List<CourseBean> results = controller.searchCoursesByFilters(filter);
 
-        // Assert
+   
         assertEquals(1, results.size());
         assertEquals("AI Master", results.get(0).getTitle());
     }
 
-    // --- Stub Setup ---
+
     private void injectStubFactory(List<Course> courses) throws Exception {
         Field instance = DAOFactory.class.getDeclaredField("instance");
         instance.setAccessible(true);

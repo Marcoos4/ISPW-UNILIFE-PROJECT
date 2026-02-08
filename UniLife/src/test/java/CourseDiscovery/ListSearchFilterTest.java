@@ -51,22 +51,22 @@ class ListSearchFilterTest {
 
     @Test
     void testListSearchFilterGeneratesCorrectRanges() {
-        // Act
+
         List<FilterCourseBean> filters = controller.listSearchFilter();
 
-        // Assert
+   
         assertEquals(2, filters.size(), "Dovrebbero esserci 2 elementi filtrati");
 
-        // Verifica Corso A
+  
         assertEquals("1 - 100", filters.get(0).getUniversityRankingRange());
         assertEquals("Short", filters.get(0).getCourseDurationRange());
 
-        // Verifica Corso B
+
         assertEquals("101 - 200", filters.get(1).getUniversityRankingRange());
         assertEquals("Medium", filters.get(1).getCourseDurationRange());
     }
 
-    // --- Stub Setup ---
+
     private void injectStubFactory(List<Course> courses) throws Exception {
         Field instance = DAOFactory.class.getDeclaredField("instance");
         instance.setAccessible(true);

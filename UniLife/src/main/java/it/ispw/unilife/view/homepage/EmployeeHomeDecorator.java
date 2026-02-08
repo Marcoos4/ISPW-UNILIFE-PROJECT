@@ -9,10 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-/**
- * University Employee home page decorator.
- * Shows Manage Course, Add Course, and Show Notifications buttons.
- */
+
 public class EmployeeHomeDecorator extends HomePageDecorator {
 
     private static final String BUTTON_STYLE = "-fx-background-color: #ff9933; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;";

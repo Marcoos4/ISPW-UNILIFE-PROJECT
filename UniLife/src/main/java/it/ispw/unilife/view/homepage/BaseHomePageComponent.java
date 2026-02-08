@@ -9,10 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-/**
- * Base (Guest) home page component.
- * Shows only Login/Register button.
- */
 public class BaseHomePageComponent implements HomePageComponent {
 
     private static final String BUTTON_STYLE = "-fx-background-color: #ff9933; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;";

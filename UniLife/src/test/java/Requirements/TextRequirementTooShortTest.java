@@ -11,13 +11,13 @@ class TextRequirementTooShortTest {
 
     @Test
     void testValidateTextTooShort() {
-        // Arrange
+      
         TextRequirement req = new TextRequirement("BIO", "Biography", "Your bio", 20, 100);
 
         String shortText = "Too short"; // 9 caratteri
         ApplicationItem item = new ApplicationItem("BIO", shortText);
 
-        // Act & Assert
+
         RequirementValidateException exception = assertThrows(RequirementValidateException.class, () -> {
             req.validate(item);
         });

@@ -3,10 +3,7 @@ package it.ispw.unilife.view.homepage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-/**
- * Abstract decorator for the HomePage.
- * Wraps a HomePageComponent and adds additional functionality.
- */
+
 public abstract class HomePageDecorator implements HomePageComponent {
 
     protected HomePageComponent wrappedComponent;

@@ -11,13 +11,13 @@ class DocumentRequirementMissingTest {
 
     @Test
     void testValidateDocumentMissing() {
-        // Arrange
+
         DocumentRequirement req = new DocumentRequirement("CERT", "Certificate", "English Cert", "pdf", 2, true);
 
-        // Simuliamo un item senza documento allegato (null)
+
         ApplicationItem item = new ApplicationItem("CERT", (String) null);
 
-        // Act & Assert
+
         DAOException exception = assertThrows(DAOException.class, () -> {
             req.validate(item);
         });

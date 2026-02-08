@@ -12,13 +12,12 @@ class DocumentRequirementSizeExceededTest {
 
     @Test
     void testValidateDocumentSizeExceeded() {
-        // Arrange
-        // Requisito: Max 1 MB
+
         DocumentRequirement req = new DocumentRequirement("ID", "Identity Card", "Upload ID", "jpg", 1, false);
 
         Document doc = new Document();
         doc.setFileType("jpg");
-        // Impostiamo 1.5 MB in KB -> 1.5 * 1024 = 1536 KB
+        // 1.5 MB in KB -> 1.5 * 1024 = 1536 KB
         doc.setFileSize(1536.0);
 
         ApplicationItem item = new ApplicationItem("ID", doc);

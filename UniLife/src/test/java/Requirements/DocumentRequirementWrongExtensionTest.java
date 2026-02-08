@@ -12,8 +12,7 @@ class DocumentRequirementWrongExtensionTest {
 
     @Test
     void testValidateDocumentWrongExtension() {
-        // Arrange
-        // Requisito: Richiede "pdf"
+  
         DocumentRequirement req = new DocumentRequirement("TRANSCRIPT", "Transcript", "Grades", "pdf", 10, true);
 
         Document doc = new Document();
@@ -22,7 +21,7 @@ class DocumentRequirementWrongExtensionTest {
 
         ApplicationItem item = new ApplicationItem("TRANSCRIPT", doc);
 
-        // Act & Assert
+  
         RequirementValidateException exception = assertThrows(RequirementValidateException.class, () -> {
             req.validate(item);
         });

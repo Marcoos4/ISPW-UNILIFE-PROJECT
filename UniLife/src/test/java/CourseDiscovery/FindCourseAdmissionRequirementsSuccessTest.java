@@ -1,11 +1,15 @@
 package CourseDiscovery;
 
+import it.ispw.unilife.bean.AdmissionRequirementBean;
 import it.ispw.unilife.bean.CourseBean;
+import it.ispw.unilife.bean.UniversityBean;
 import it.ispw.unilife.controller.CourseDiscoveryAndApplication;
 import it.ispw.unilife.dao.*;
 import it.ispw.unilife.dao.factory.DAOFactory;
 import it.ispw.unilife.model.Course;
 import it.ispw.unilife.model.University;
+import it.ispw.unilife.model.admission.AdmissionRequirements;
+import it.ispw.unilife.model.admission.TextRequirement;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +18,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-class SearchCourseByNameTest {
+class FindCourseAdmissionRequirementsSuccessTest {
 
     private CourseDiscoveryAndApplication controller;
 
@@ -25,14 +29,14 @@ class SearchCourseByNameTest {
         List<Course> dummyCourses = new ArrayList<>();
 
         Course c1 = new Course();
-        c1.setCourseTitle("Engineering");
-        c1.setUniversity(new University("PoliMi", "Milan", 20, 1500.0));
-        dummyCourses.add(c1);
+        c1.setCourseTitle("Chemistry");
+        c1.setUniversity(new University("Oxford", "UK", 5, 2000.0));
 
-        Course c2 = new Course();
-        c2.setCourseTitle("Medicine");
-        c2.setUniversity(new University("Humanitas", "Milan", 10, 2500.0));
-        dummyCourses.add(c2);
+        AdmissionRequirements reqs = new AdmissionRequirements();
+        reqs.addRequirement(new TextRequirement("ML", "Motivation Letter", "Why do you want to join?", 100, 500));
+        c1.setAdmissionRequirements(reqs);
+
+        dummyCourses.add(c1);
 
         injectStubFactory(dummyCourses);
         controller = new CourseDiscoveryAndApplication();
@@ -44,20 +48,25 @@ class SearchCourseByNameTest {
     }
 
     @Test
-    void testSearchCourseByNamePartialMatch() {
-        // Arrange
-        CourseBean searchBean = new CourseBean();
-        searchBean.setTitle("Engin");
+    void testFindCourseAdmissionRequirementsSuccess() throws Exception {
 
-        // Act
-        List<CourseBean> result = controller.searchCourseByName(searchBean);
+        CourseBean input = new CourseBean();
+        input.setTitle("Chemistry");
+        UniversityBean uni = new UniversityBean();
+        uni.setName("Oxford");
+        input.setUniversity(uni);
 
-        // Assert
-        assertEquals(1, result.size(), "Dovrebbe trovare 1 corso corrispondente a 'Engin'");
-        assertEquals("Engineering", result.get(0).getTitle());
+
+        AdmissionRequirementBean result = controller.findCourseAdmissionRequirements(input);
+
+
+        assertNotNull(result);
+        assertNotNull(result.getRequirements());
+        assertFalse(result.getRequirements().isEmpty());
+        assertEquals("ML", result.getRequirements().get(0).getName());
     }
 
-    // --- Stub Setup ---
+
     private void injectStubFactory(List<Course> courses) throws Exception {
         Field instance = DAOFactory.class.getDeclaredField("instance");
         instance.setAccessible(true);

@@ -1,11 +1,9 @@
 package CourseDiscovery;
 
 import it.ispw.unilife.bean.CourseBean;
-import it.ispw.unilife.bean.UniversityBean;
 import it.ispw.unilife.controller.CourseDiscoveryAndApplication;
 import it.ispw.unilife.dao.*;
 import it.ispw.unilife.dao.factory.DAOFactory;
-import it.ispw.unilife.exception.DAOException;
 import it.ispw.unilife.model.Course;
 import it.ispw.unilife.model.University;
 import org.junit.jupiter.api.AfterEach;
@@ -16,20 +14,25 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FindCourseAdmissionRequirementsExceptionTest {
+class SearchCourseByNameTest {
 
     private CourseDiscoveryAndApplication controller;
 
     @BeforeEach
     void setUp() throws Exception {
-        // Setup base, anche se cercheremo qualcosa che non esiste
         List<Course> dummyCourses = new ArrayList<>();
+
         Course c1 = new Course();
-        c1.setCourseTitle("Chemistry");
-        c1.setUniversity(new University("Oxford", "UK", 5, 2000.0));
+        c1.setCourseTitle("Engineering");
+        c1.setUniversity(new University("PoliMi", "Milan", 20, 1500.0));
         dummyCourses.add(c1);
+
+        Course c2 = new Course();
+        c2.setCourseTitle("Medicine");
+        c2.setUniversity(new University("Humanitas", "Milan", 10, 2500.0));
+        dummyCourses.add(c2);
 
         injectStubFactory(dummyCourses);
         controller = new CourseDiscoveryAndApplication();
@@ -41,21 +44,20 @@ class FindCourseAdmissionRequirementsExceptionTest {
     }
 
     @Test
-    void testFindCourseAdmissionRequirementsThrowsExceptionIfNotFound() {
-        // Arrange
-        CourseBean input = new CourseBean();
-        input.setTitle("NonExistent");
-        UniversityBean uni = new UniversityBean();
-        uni.setName("Nowhere");
-        input.setUniversity(uni);
+    void testSearchCourseByNamePartialMatch() {
 
-        // Act & Assert
-        assertThrows(DAOException.class, () -> {
-            controller.findCourseAdmissionRequirements(input);
-        });
+        CourseBean searchBean = new CourseBean();
+        searchBean.setTitle("Engin");
+
+
+        List<CourseBean> result = controller.searchCourseByName(searchBean);
+
+    
+        assertEquals(1, result.size(), "Dovrebbe trovare 1 corso corrispondente a 'Engin'");
+        assertEquals("Engineering", result.get(0).getTitle());
     }
 
-    // --- Stub Setup ---
+
     private void injectStubFactory(List<Course> courses) throws Exception {
         Field instance = DAOFactory.class.getDeclaredField("instance");
         instance.setAccessible(true);
