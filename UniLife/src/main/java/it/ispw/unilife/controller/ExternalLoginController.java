@@ -11,7 +11,7 @@ import it.ispw.unilife.dao.factory.DAOFactory;
 import it.ispw.unilife.exception.DAOException;
 import it.ispw.unilife.exception.ExternalAuthenticationException;
 import it.ispw.unilife.exception.ExternalUserNotFoundException;
-import it.ispw.unilife.exception.UserNotFoundException; // Assicurati di usare o creare questa eccezione
+import it.ispw.unilife.exception.UserNotFoundException; 
 import it.ispw.unilife.model.User;
 import it.ispw.unilife.model.session.SessionManager;
 
@@ -44,7 +44,7 @@ public class ExternalLoginController {
 
         UserBean userBean = authResult.getUserBean();
 
-        // Modifica qui: se l'utente non esiste, lancia l'eccezione con i dati
+
         User user = findUser(userBean);
 
         String token = SessionManager.getInstance().createSession(user);
@@ -65,7 +65,7 @@ public class ExternalLoginController {
         }
     }
 
-    // Rinomina e modifica la logica: ora cerca SOLO, non crea
+
     private User findUser(UserBean userBean) throws UserNotFoundException, DAOException {
         try {
             List<User> users = userDAO.getAll();
@@ -76,10 +76,7 @@ public class ExternalLoginController {
                 }
             }
 
-            // Se non trovato, lancia l'eccezione portandosi dietro i dati dell'utente esterno
-            // Nota: UserNotFoundException potrebbe aver bisogno di un costruttore o un campo per UserBean
-            // Oppure, creiamo una eccezione specifica che trasporta il bean.
-            // Per semplicità qui, assumiamo che UserNotFoundException possa trasportare il bean o creiamo una custom.
+
             throw new ExternalUserNotFoundException("Utente esterno non registrato", userBean);
 
         } catch (DAOException e) {
