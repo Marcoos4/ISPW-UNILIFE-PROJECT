@@ -26,9 +26,6 @@ public class CourseDiscoveryAndApplication {
     private static final Logger LOGGER = Logger.getLogger((CourseDiscoveryAndApplication.class.getName()));
 
 
-    //==================================================================================
-    // PUBLIC INTERFACE - SEARCH & DISCOVERY
-    // ==================================================================================
 
     public List<FilterCourseBean> listSearchFilter() {
         List<FilterCourseBean> beanList = new ArrayList<>();
@@ -118,20 +115,17 @@ public class CourseDiscoveryAndApplication {
         }
     }
 
-    // ==================================================================================
-    // PUBLIC INTERFACE - USER ACTIONS (FAVORITES & APPLICATIONS)
-    // ==================================================================================
 
     public void submitApplication(TokenBean tokenBean, ApplicationBean applicationBean)
             throws InvalidTokenException, DAOException, DataNotFoundException, InvalidCertificateException, UserNotFoundException {
 
-        // 1. Validazione Studente
+
         Student student = validateSessionAndGetStudent(tokenBean);
         if (student == null) {
             throw new InvalidTokenException("User not authorized or not a student");
         }
 
-        // 2. Recupero Corso
+
         if (applicationBean.getCourseBean() == null) {
             throw new DataNotFoundException("Course information missing");
         }
@@ -141,7 +135,6 @@ public class CourseDiscoveryAndApplication {
 
         Course courseEntity = findCourseEntity(courseTitle, uniName);
 
-        // 3. Processamento Items
         List<ApplicationItem> validatedItems = processApplicationItems(courseEntity, applicationBean);
 
         Application newApplication = new Application(
@@ -198,9 +191,6 @@ public class CourseDiscoveryAndApplication {
         LOGGER.log(Level.INFO,"Evaluation completed: {0}", eval);
     }
 
-    // ==================================================================================
-    // PRIVATE HELPERS - VALIDATION & PROCESSING
-    // ==================================================================================
 
     private List<ApplicationItem> processApplicationItems(Course course, ApplicationBean applicationBean)
             throws InvalidCertificateException {
@@ -287,9 +277,6 @@ public class CourseDiscoveryAndApplication {
         return doc;
     }
 
-    // ==================================================================================
-    // PRIVATE HELPERS - SEARCH & EXTRACTION
-    // ==================================================================================
 
     private Course findCourseEntity(String title, String uniName) throws DAOException, UserNotFoundException {
         List<Course> allCourses = getCourseDAO().getAll();
@@ -322,7 +309,6 @@ public class CourseDiscoveryAndApplication {
 
     private Application findApplicationInDAO(ApplicationBean appBean) throws DAOException, UserNotFoundException {
         ApplicationDAO appDAO = DAOFactory.getDAOFactory().getApplicationDAO();
-        // Nota: Usare getAll() è inefficiente, ma per ora risolviamo il bug logico
         List<Application> allApplications = appDAO.getAll();
 
         for (Application app : allApplications) {
@@ -337,21 +323,12 @@ public class CourseDiscoveryAndApplication {
             boolean matchUni = java.util.Objects.equals(app.getCourse().getUniversity().getName(), beanUniName);
             boolean matchStudent = java.util.Objects.equals(app.getApplicant().getUsername(), beanStudentUser);
             boolean matchCreationDate = java.util.Objects.equals(creationDate, appBean.getCreationDate());
-
-            // RIMOSSO IL CONFRONTO ESATTO DELLA DATA
-            // Spesso Studente + Corso + Università è sufficiente per identificare la domanda.
-
-            // Opzionale: Se vuoi essere sicuro, controlla che lo stato non sia già finalizzato
-            // o controlla l'ID se disponibile.
             if (matchTitle && matchUni && matchStudent && matchCreationDate) return app;
         }
 
         throw  new UserNotFoundException();
     }
 
-    // ==================================================================================
-    // PRIVATE HELPERS - DAO & MAPPERS
-    // ==================================================================================
 
     private CourseDAO getCourseDAO() throws DAOException {
         return DAOFactory.getDAOFactory().getCourseDAO();
@@ -455,10 +432,6 @@ public class CourseDiscoveryAndApplication {
         return bean;
     }
 
-    // ==================================================================================
-    // PRIVATE HELPERS - MATCHING LOGIC & CALCULATIONS
-    // ==================================================================================
-
     private boolean isCourseMatching(Course course, FilterCourseBean filter) {
         if (filter == null) return true;
         return matchesUniversityName(course, filter.getUniversityName())
@@ -515,9 +488,6 @@ public class CourseDiscoveryAndApplication {
         return "Long";
     }
 
-    // ==================================================================================
-    // PRIVATE HELPERS - SESSION & VALIDATION
-    // ==================================================================================
 
     private Student validateSessionAndGetStudent(TokenBean tokenBean) throws InvalidTokenException {
         if (!SessionManager.getInstance().sessionIsValid(tokenBean.getToken())) {
