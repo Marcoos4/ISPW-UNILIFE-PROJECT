@@ -34,7 +34,7 @@ public class NotificationSystem implements Observer {
         }
     }
 
-    private SessionManager manager = SessionManager.getInstance();
+    private final SessionManager manager = SessionManager.getInstance();
 
     public static NotificationSystem getInstance() {
         if (instance == null) instance = new NotificationSystem();
@@ -63,8 +63,7 @@ public class NotificationSystem implements Observer {
         // Adattiamo la chiamata al nuovo metodo findNotificationModel che prende stringa
         Notification notification = findNotificationModel(tokenBean.getToken(), notificationBean);
 
-        if (notification instanceof ReservationNotification) {
-            ReservationNotification resNotification = (ReservationNotification) notification;
+        if (notification instanceof ReservationNotification resNotification) {
             Reservation reservation = resNotification.getReservation();
 
             BookTutor bookTutor = new BookTutor();
@@ -85,8 +84,7 @@ public class NotificationSystem implements Observer {
     public Lesson resolveLessonNotification(NotificationBean notificationBean, String token) throws DAOException {
         Notification notification = findNotificationModel(token, notificationBean);
 
-        if (notification instanceof LessonNotification) {
-            LessonNotification lessonNotification = (LessonNotification) notification;
+        if (notification instanceof LessonNotification lessonNotification) {
             return lessonNotification.getLesson();
         }
 
@@ -97,8 +95,7 @@ public class NotificationSystem implements Observer {
         // Adattiamo la chiamata al nuovo metodo findNotificationModel che prende stringa
         Notification notification = findNotificationModel(tokenBean.getToken(), notificationBean);
 
-        if (notification instanceof ApplicationNotification) {
-            ApplicationNotification appNotification = (ApplicationNotification) notification;
+        if (notification instanceof ApplicationNotification appNotification) {
             Application application = appNotification.getApplication();
             return convertApplicationToBean(application);
         }
@@ -287,12 +284,12 @@ public class NotificationSystem implements Observer {
 
         String event = (String) arg;
 
-        if (subject instanceof Application) {
-            handleApplicationEvent((Application) subject, event, token);
-        } else if (subject instanceof Lesson) {
-            handleLessonEvent((Lesson) subject, event, token);
-        } else if (subject instanceof Reservation) {
-            handleReservationEvent((Reservation) subject, event, token);
+        if (subject instanceof Application application) {
+            handleApplicationEvent(application, event, token);
+        } else if (subject instanceof Lesson lesson) {
+            handleLessonEvent(lesson, event, token);
+        } else if (subject instanceof Reservation reservation) {
+            handleReservationEvent(reservation, event, token);
         }
     }
 
@@ -399,7 +396,7 @@ public class NotificationSystem implements Observer {
         }
 
         for(User user: daoResult){
-            if(user instanceof UniversityEmployee && ((UniversityEmployee) user).getUniversity().equals(course.getUniversity())){
+            if(user instanceof UniversityEmployee employee && (employee.getUniversity().equals(course.getUniversity()))){
                 result.add(user);
             }
         }
@@ -437,7 +434,7 @@ public class NotificationSystem implements Observer {
         }
 
         for(Notification notification : notifications) {
-            if (notification instanceof ApplicationNotification && ((ApplicationNotification) notification).getApplication().equals(app)) {
+            if (notification instanceof ApplicationNotification applicationNotification && (applicationNotification).getApplication().equals(app)) {
                 notification.updateStatus(NotificationStatus.COMPLETED);
 
                 notificationDAO.update(notification);
@@ -456,7 +453,7 @@ public class NotificationSystem implements Observer {
         }
 
         for(Notification notification : notifications) {
-            if (notification instanceof LessonNotification && ((LessonNotification) notification).getLesson().equals(lesson)) {
+            if (notification instanceof LessonNotification lessonNotification && (lessonNotification).getLesson().equals(lesson)) {
                 notification.updateStatus(NotificationStatus.COMPLETED);
                 LOGGER.info("Lesson notification has been updated");
                 notificationDAO.update(notification);
@@ -475,7 +472,7 @@ public class NotificationSystem implements Observer {
         }
 
         for(Notification notification : notifications) {
-            if (notification instanceof ReservationNotification && ((ReservationNotification) notification).getReservation().equals(res)) {
+            if (notification instanceof ReservationNotification reservationNotification && (reservationNotification).getReservation().equals(res)) {
                 LOGGER.info("application foudn");
                 notification.updateStatus(NotificationStatus.COMPLETED);
                 notificationDAO.update(notification);
