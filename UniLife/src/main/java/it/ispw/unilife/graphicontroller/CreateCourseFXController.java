@@ -191,8 +191,8 @@ public class CreateCourseFXController {
         List<RequirementBean> reqList = new ArrayList<>();
 
         for (Node node : reqContainer.getChildren()) {
-            if (node instanceof HBox) {
-                HBox row = (HBox) node;
+            if (node instanceof HBox hBox) {
+                HBox row = hBox;
                 // Assumo che lo UserData sia stato settato durante la creazione della riga
                 String type = (String) row.getUserData();
 

@@ -54,8 +54,8 @@ public class PaymentFXController {
         Object data = Navigator.getInstance().getCurrentData();
 
         try {
-            if (data instanceof NotificationBean) {
-                NotificationBean currentNotification = (NotificationBean) data;
+            if (data instanceof NotificationBean notificationBean) {
+                NotificationBean currentNotification = notificationBean;
                 currentReservation = notificationSystem.resolveReservationNotification(
                         currentNotification,
                         Navigator.getInstance().getCurrentToken()
@@ -66,8 +66,8 @@ public class PaymentFXController {
                 } else {
                     showError("Impossibile recuperare i dettagli della prenotazione.");
                 }
-            } else if (data instanceof ReservationBean) {
-                currentReservation = (ReservationBean) data;
+            } else if (data instanceof ReservationBean reservationBean) {
+                currentReservation = reservationBean;
                 populatePaymentDetails(currentReservation);
             }
         } catch (DAOException e) {

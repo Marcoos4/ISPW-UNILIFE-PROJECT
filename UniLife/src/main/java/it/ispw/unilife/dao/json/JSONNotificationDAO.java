@@ -95,12 +95,12 @@ public class JSONNotificationDAO implements NotificationDAO {
         records.add(r);
         saveToFile();
 
-        if (item instanceof ReservationNotification) {
-            JSONReservationNotificationDAO.getInstance().insert((ReservationNotification) item);
-        } else if (item instanceof LessonNotification) {
-            JSONLessonNotificationDAO.getInstance().insert((LessonNotification) item);
-        } else if (item instanceof ApplicationNotification) {
-            JSONApplicationNotificationDAO.getInstance().insert((ApplicationNotification) item);
+        if (item instanceof ReservationNotification reservationNotification) {
+            JSONReservationNotificationDAO.getInstance().insert(reservationNotification);
+        } else if (item instanceof LessonNotification lessonNotification) {
+            JSONLessonNotificationDAO.getInstance().insert(lessonNotification);
+        } else if (item instanceof ApplicationNotification applicationNotification) {
+            JSONApplicationNotificationDAO.getInstance().insert(applicationNotification);
         }
 
         logger.info("Notifica salvata correttamente per: " + user.getUsername());
@@ -113,12 +113,12 @@ public class JSONNotificationDAO implements NotificationDAO {
 
     @Override
     public void update(Notification item) throws DAOException {
-        if (item instanceof ReservationNotification) {
-            JSONReservationNotificationDAO.getInstance().update((ReservationNotification) item);
-        } else if (item instanceof LessonNotification) {
-            JSONLessonNotificationDAO.getInstance().update((LessonNotification) item);
-        } else if (item instanceof ApplicationNotification) {
-            JSONApplicationNotificationDAO.getInstance().update((ApplicationNotification) item);
+        if (item instanceof ReservationNotification reservationNotification) {
+            JSONReservationNotificationDAO.getInstance().update(reservationNotification);
+        } else if (item instanceof LessonNotification lessonNotification) {
+            JSONLessonNotificationDAO.getInstance().update(lessonNotification);
+        } else if (item instanceof ApplicationNotification applicationNotification) {
+            JSONApplicationNotificationDAO.getInstance().update(applicationNotification);
         }
     }
 

@@ -116,10 +116,10 @@ public class JSONCourseDAO implements CourseDAO {
             JSONCourseTagDAO.getInstance().insert(tag, item);
         }
         for (AbstractRequirement req : item.getRequirements()) {
-            if (req instanceof TextRequirement) {
-                JSONTextRequirementDAO.getInstance().insert((TextRequirement) req, item);
-            } else if (req instanceof DocumentRequirement) {
-                JSONDocumentRequirementDAO.getInstance().insert((DocumentRequirement) req, item);
+            if (req instanceof TextRequirement textRequirement) {
+                JSONTextRequirementDAO.getInstance().insert(textRequirement, item);
+            } else if (req instanceof DocumentRequirement documentRequirement) {
+                JSONDocumentRequirementDAO.getInstance().insert(documentRequirement, item);
             }
         }
         cache.add(item);
@@ -132,10 +132,10 @@ public class JSONCourseDAO implements CourseDAO {
             JSONCourseTagDAO.getInstance().update(tag, item);
         }
         for (AbstractRequirement req : item.getRequirements()) {
-            if (req instanceof TextRequirement) {
-                JSONTextRequirementDAO.getInstance().update((TextRequirement) req, item);
-            } else if (req instanceof DocumentRequirement) {
-                JSONDocumentRequirementDAO.getInstance().update((DocumentRequirement) req, item);
+            if (req instanceof TextRequirement textRequirement) {
+                JSONTextRequirementDAO.getInstance().update(textRequirement, item);
+            } else if (req instanceof DocumentRequirement documentRequirement) {
+                JSONDocumentRequirementDAO.getInstance().update(documentRequirement, item);
             }
         }
         cache.removeIf(c -> c.getCourseTitle().equals(item.getCourseTitle()) && c.getUniversity().getName().equals(item.getUniversity().getName()));
@@ -149,10 +149,10 @@ public class JSONCourseDAO implements CourseDAO {
             JSONCourseTagDAO.getInstance().delete(tag, item);
         }
         for (AbstractRequirement req : item.getRequirements()) {
-            if (req instanceof TextRequirement) {
-                JSONTextRequirementDAO.getInstance().delete((TextRequirement) req, item);
-            } else if (req instanceof DocumentRequirement) {
-                JSONDocumentRequirementDAO.getInstance().delete((DocumentRequirement) req, item);
+            if (req instanceof TextRequirement textRequirement) {
+                JSONTextRequirementDAO.getInstance().delete(textRequirement, item);
+            } else if (req instanceof DocumentRequirement documentRequirement) {
+                JSONDocumentRequirementDAO.getInstance().delete(documentRequirement, item);
             }
         }
         cache.removeIf(c -> c.getCourseTitle().equals(item.getCourseTitle()) && c.getUniversity().getName().equals(item.getUniversity().getName()));

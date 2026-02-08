@@ -38,8 +38,8 @@ public class EvaluateLessonFXController {
         tokenBean = Navigator.getInstance().getCurrentToken();
 
         // Ci aspettiamo che il ProfileController ci passi direttamente la Notifica
-        if (data instanceof NotificationBean) {
-            NotificationBean currentNotification = (NotificationBean) data;
+        if (data instanceof NotificationBean notificationBean) {
+            NotificationBean currentNotification = notificationBean;
 
             try {
                 // Chiamiamo il controller applicativo per recuperare i dettagli della lezione

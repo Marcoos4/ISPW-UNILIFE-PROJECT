@@ -92,15 +92,15 @@ public class DBNotificationDAO implements NotificationDAO {
             stmt.executeUpdate();
 
             // Delega l'inserimento dei dettagli
-            if (item instanceof ReservationNotification) {
-                DBReservationNotificationDAO.getInstance().insert((ReservationNotification) item);
+            if (item instanceof ReservationNotification reservationNotification) {
+                DBReservationNotificationDAO.getInstance().insert(reservationNotification);
 
-            } else if (item instanceof LessonNotification) {
-                DBLessonNotificationDAO.getInstance().insert((LessonNotification) item);
+            } else if (item instanceof LessonNotification lessonNotification) {
+                DBLessonNotificationDAO.getInstance().insert(lessonNotification);
 
-            } else if (item instanceof ApplicationNotification) {
+            } else if (item instanceof ApplicationNotification applicationNotification) {
                 // Passiamo 'user' per la tabella specifica
-                DBApplicationNotificationDAO.getInstance().insert((ApplicationNotification) item);
+                DBApplicationNotificationDAO.getInstance().insert(applicationNotification);
             }
 
             logger.info("Notifica salvata correttamente per: " + user.getUsername());
@@ -117,12 +117,12 @@ public class DBNotificationDAO implements NotificationDAO {
 
     @Override
     public void update(Notification item) throws DAOException {
-        if (item instanceof ReservationNotification) {
-            DBReservationNotificationDAO.getInstance().update((ReservationNotification) item);
-        } else if (item instanceof LessonNotification) {
-            DBLessonNotificationDAO.getInstance().update((LessonNotification) item);
-        } else if (item instanceof ApplicationNotification) {
-            DBApplicationNotificationDAO.getInstance().update((ApplicationNotification) item);
+        if (item instanceof ReservationNotification reservationNotification) {
+            DBReservationNotificationDAO.getInstance().update(reservationNotification);
+        } else if (item instanceof LessonNotification  lessonNotification) {
+            DBLessonNotificationDAO.getInstance().update(lessonNotification);
+        } else if (item instanceof ApplicationNotification applicationNotification) {
+            DBApplicationNotificationDAO.getInstance().update(applicationNotification);
         }
     }
 

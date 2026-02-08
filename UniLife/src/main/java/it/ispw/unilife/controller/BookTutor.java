@@ -86,8 +86,8 @@ public class BookTutor {
     public ReservationBean startReservationProcedure(TokenBean tokenBean, LessonBean lessonBean) throws InvalidTokenException {
         User currentUser = getActiveUser(tokenBean);
         ReservationBean reservationBean = new ReservationBean();
-        if (currentUser instanceof Student) {
-            reservationBean.setStudent(convertToStudentBean((Student) currentUser));
+        if (currentUser instanceof Student student) {
+            reservationBean.setStudent(convertToStudentBean(student));
         }
         reservationBean.setLesson(lessonBean);
         reservationBean.setStatus(ReservationStatus.PENDING.toString());

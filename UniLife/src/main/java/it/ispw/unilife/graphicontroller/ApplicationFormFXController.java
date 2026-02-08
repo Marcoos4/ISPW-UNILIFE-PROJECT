@@ -46,8 +46,8 @@ public class ApplicationFormFXController {
     @FXML
     public void initialize() {
         Object data = Navigator.getInstance().getCurrentData();
-        if (data instanceof CourseBean) {
-            this.selectedCourse = (CourseBean) data;
+        if (data instanceof CourseBean courseBean) {
+            this.selectedCourse = courseBean;
             lblCourseTitle.setText(selectedCourse.getTitle() + " - Application");
             loadRequirements();
         } else {

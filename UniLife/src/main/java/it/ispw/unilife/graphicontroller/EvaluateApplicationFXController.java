@@ -40,15 +40,15 @@ public class EvaluateApplicationFXController {
         Object data = Navigator.getInstance().getCurrentData();
         tokenBean = Navigator.getInstance().getCurrentToken();
 
-        if (data instanceof EvaluationContextBean) {
-            EvaluationContextBean context = (EvaluationContextBean) data;
+        if (data instanceof EvaluationContextBean evaluationContextBean) {
+            EvaluationContextBean context = evaluationContextBean;
             this.currentApplication = context.getApplicationBean();
 
             populateView();
         }
 
-        else if (data instanceof ApplicationBean) {
-            this.currentApplication = (ApplicationBean) data;
+        else if (data instanceof ApplicationBean applicationBean) {
+            this.currentApplication = applicationBean;
             populateView();
         } else {
             logger.severe("Nessun dato valido trovato nel Navigator.");

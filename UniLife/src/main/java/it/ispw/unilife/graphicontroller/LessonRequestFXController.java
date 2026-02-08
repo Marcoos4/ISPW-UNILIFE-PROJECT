@@ -43,8 +43,8 @@ public class LessonRequestFXController {
     @FXML
     public void initialize() throws DAOException {
         Object data = Navigator.getInstance().getCurrentData();
-        if (data instanceof NotificationBean) {
-            NotificationBean currentNotification = (NotificationBean) data;
+        if (data instanceof NotificationBean notificationBean) {
+            NotificationBean currentNotification = notificationBean;
             currentReservation = notificationSystem.resolveReservationNotification(currentNotification, Navigator.getInstance().getCurrentToken());
             populateRequestDetails(currentReservation);
         }

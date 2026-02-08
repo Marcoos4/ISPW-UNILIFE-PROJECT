@@ -47,8 +47,8 @@ public class CourseDetailFXController {
     public void initialize() {
         Object data = Navigator.getInstance().getCurrentData();
 
-        if (data instanceof CourseBean) {
-             selectedCourse = courseController.findCourseInformation((CourseBean) data);
+        if (data instanceof CourseBean courseBean) {
+             selectedCourse = courseController.findCourseInformation(courseBean);
             populateDetails();
         } else {
             lblCourseName.setText("Nessun corso selezionato");

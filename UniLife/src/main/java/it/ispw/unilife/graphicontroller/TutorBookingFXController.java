@@ -45,8 +45,8 @@ public class TutorBookingFXController {
     public void initialize() {
         Object data = Navigator.getInstance().getCurrentData();
         currentReservation = (ReservationBean) data;
-        if (data instanceof ReservationBean) {
-            currentLesson = ((ReservationBean) data).getLesson();
+        if (data instanceof ReservationBean reservationBean) {
+            currentLesson = (reservationBean).getLesson();
             populateLessonDetails(currentLesson);
         }
     }

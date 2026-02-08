@@ -211,8 +211,8 @@ public class CourseDiscoveryAndApplication {
         for (AbstractRequirement req : requirements) {
             ApplicationItemBean inputBean = findInputItemByRequirementName(applicationBean.getItems(), req.getName());
 
-            if (req instanceof DocumentRequirement) {
-                DocumentRequirement docReq = (DocumentRequirement) req;
+            if (req instanceof DocumentRequirement documentRequirement) {
+                DocumentRequirement docReq =  documentRequirement;
 
                 if (docReq.isCertificate()) {
                     validateExternalCertificate(inputBean, docReq);
@@ -395,13 +395,13 @@ public class CourseDiscoveryAndApplication {
         bean.setLabel(reqModel.getLabel());
         bean.setDescription(reqModel.getDescription());
 
-        if (reqModel instanceof TextRequirement) {
-            TextRequirement textReq = (TextRequirement) reqModel;
+        if (reqModel instanceof TextRequirement textRequirement) {
+            TextRequirement textReq = textRequirement;
             bean.setType("TEXT");
             bean.setMinChars(textReq.getMinChars());
             bean.setMaxChars(textReq.getMaxChars());
-        } else if (reqModel instanceof DocumentRequirement) {
-            DocumentRequirement docReq = (DocumentRequirement) reqModel;
+        } else if (reqModel instanceof DocumentRequirement documentRequirement) {
+            DocumentRequirement docReq = documentRequirement;
             bean.setType("DOCUMENT");
             bean.setMaxSizeMB(docReq.getMaxSizeMB());
             bean.setAllowedExtension(docReq.getAllowedExtension());

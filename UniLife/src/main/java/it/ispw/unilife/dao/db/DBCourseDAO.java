@@ -122,11 +122,11 @@ public class DBCourseDAO implements CourseDAO {
                 DBCourseTagDAO.getInstance().insert(courseTags, item);
             }
             for (AbstractRequirement abstractRequirement: item.getRequirements()){
-                if(abstractRequirement instanceof TextRequirement){
-                    DBTextRequirementDAO.getInstance().insert((TextRequirement) abstractRequirement, item);
+                if(abstractRequirement instanceof TextRequirement textRequirement){
+                    DBTextRequirementDAO.getInstance().insert( textRequirement, item);
                 }
-                else if(abstractRequirement instanceof DocumentRequirement){
-                    DBDocumentRequirementDAO.getInstance().insert((DocumentRequirement) abstractRequirement, item);
+                else if(abstractRequirement instanceof DocumentRequirement  documentRequirement){
+                    DBDocumentRequirementDAO.getInstance().insert( documentRequirement, item);
                 }
             }
 
@@ -160,11 +160,11 @@ public class DBCourseDAO implements CourseDAO {
                 DBCourseTagDAO.getInstance().update(courseTags, item);
             }
             for (AbstractRequirement abstractRequirement: item.getRequirements()){
-                if(abstractRequirement instanceof TextRequirement){
-                    DBTextRequirementDAO.getInstance().update((TextRequirement) abstractRequirement, item);
+                if(abstractRequirement instanceof TextRequirement textRequirement){
+                    DBTextRequirementDAO.getInstance().update( textRequirement, item);
                 }
-                else if(abstractRequirement instanceof DocumentRequirement){
-                    DBDocumentRequirementDAO.getInstance().update((DocumentRequirement) abstractRequirement, item);
+                else if(abstractRequirement instanceof DocumentRequirement documentRequirement){
+                    DBDocumentRequirementDAO.getInstance().update( documentRequirement, item);
                 }
             }
 
@@ -191,11 +191,11 @@ public class DBCourseDAO implements CourseDAO {
                 DBCourseTagDAO.getInstance().delete(courseTags, item);
             }
             for (AbstractRequirement abstractRequirement: item.getRequirements()){
-                if(abstractRequirement instanceof TextRequirement){
-                    DBTextRequirementDAO.getInstance().delete((TextRequirement) abstractRequirement, item);
+                if(abstractRequirement instanceof TextRequirement textRequirement){
+                    DBTextRequirementDAO.getInstance().delete( textRequirement, item);
                 }
-                else if(abstractRequirement instanceof DocumentRequirement){
-                    DBDocumentRequirementDAO.getInstance().delete((DocumentRequirement) abstractRequirement, item);
+                else if(abstractRequirement instanceof DocumentRequirement documentRequirement){
+                    DBDocumentRequirementDAO.getInstance().delete( documentRequirement, item);
                 }
             }
 

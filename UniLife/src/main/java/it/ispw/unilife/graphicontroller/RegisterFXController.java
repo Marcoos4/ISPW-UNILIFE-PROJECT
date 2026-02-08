@@ -73,8 +73,8 @@ public class RegisterFXController {
 
         // 3. RECUPERO DATI ESTERNI (Pre-fill)
         Object data = Navigator.getInstance().getCurrentData();
-        if (data instanceof UserBean) {
-            UserBean externalUserData = (UserBean) data;
+        if (data instanceof UserBean userBean) {
+            UserBean externalUserData = userBean;
             prefillForm(externalUserData);
         }
     }
