@@ -26,29 +26,23 @@ public class ManageCourse {
 
     public void addCourse(TokenBean tokenBean, CourseBean courseBean) throws InvalidTokenException, DAOException, DataNotFoundException {
 
-        // 1. Validazione e Recupero Utente (Estrazione logica Auth)
         UniversityEmployee employee = getAuthorizedEmployee(tokenBean);
 
-        // 2. Creazione Entità Base (Mapping semplice)
+
         Course newCourse = initBaseCourse(courseBean, employee.getUniversity());
 
-        // 3. Gestione Enums (Type e Tags) - Gestione try-catch incapsulata
         enrichCourseWithEnums(newCourse, courseBean);
 
-        // 4. Gestione Requisiti (Loop complesso estratto)
+
         processAdmissionRequirements(newCourse, courseBean);
 
-        // 5. Persistenza
+
         CourseDAO courseDAO = DAOFactory.getDAOFactory().getCourseDAO();
         courseDAO.insert(newCourse);
         LOGGER.info("New course added successfully");
     }
 
-    // --- METODI HELPER (LOGICA ESTRATTA) ---
 
-    /**
-     * Gestisce la validazione della sessione e del ruolo.
-     */
     private UniversityEmployee getAuthorizedEmployee(TokenBean tokenBean) throws InvalidTokenException, DataNotFoundException {
         if (!SessionManager.getInstance().sessionIsValid(tokenBean.getToken())) {
             throw new InvalidTokenException("Invalid session");
@@ -66,9 +60,7 @@ public class ManageCourse {
         return employee;
     }
 
-    /**
-     * Inizializza l'oggetto Course con i campi base.
-     */
+ 
     private Course initBaseCourse(CourseBean bean, University university) {
         Course course = new Course();
         course.setCourseTitle(bean.getTitle());
@@ -80,11 +72,9 @@ public class ManageCourse {
         return course;
     }
 
-    /**
-     * Gestisce il parsing di CourseType e Tags.
-     */
+
     private void enrichCourseWithEnums(Course course, CourseBean bean) throws InvalidTokenException {
-        // Gestione Type
+
         if (bean.getCourseType() != null) {
             try {
                 course.setCourseType(CourseType.valueOf(bean.getCourseType().toUpperCase()));
@@ -93,21 +83,18 @@ public class ManageCourse {
             }
         }
 
-        // Gestione Tags
+
         if (bean.getTags() != null) {
             for (String tagName : bean.getTags()) {
                 try {
                     course.addTag(CourseTags.valueOf(tagName));
                 } catch (IllegalArgumentException e) {
-                    // Ignora silenziosamente tag non validi (o loggali se preferisci)
                 }
             }
         }
     }
 
-    /**
-     * Itera sui requisiti e li aggiunge al corso.
-     */
+
     private void processAdmissionRequirements(Course course, CourseBean bean) {
         if (bean.getAdmissionRequirement() == null || bean.getAdmissionRequirement().getRequirements() == null) {
             return;
@@ -121,12 +108,8 @@ public class ManageCourse {
         }
     }
 
-    /**
-     * Factory Method: Crea l'istanza corretta (Text o Document) in base al tipo.
-     * Riduce la complessità ciclotica all'interno del loop.
-     */
     private AbstractRequirement createRequirementModel(RequirementBean reqBean) {
-        // Normalizzazione stringhe comuni
+
         String safeName = toUpperSafe(reqBean.getName());
         String safeLabel = toUpperSafe(reqBean.getLabel());
         String safeDesc = toUpperSafe(reqBean.getDescription());
@@ -147,9 +130,7 @@ public class ManageCourse {
         return null;
     }
 
-    /**
-     * Utility per evitare NullPointerException sulle stringhe.
-     */
+
     private String toUpperSafe(String input) {
         return (input != null) ? input.toUpperCase() : "";
     }
