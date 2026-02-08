@@ -138,13 +138,11 @@ public class ApplicationFormFXController {
     @FXML
     public void onSubmit(ActionEvent event) {
         try {
-            // 1. Costruzione dell'ApplicationBean
             ApplicationBean appBean = new ApplicationBean();
             appBean.setCourseBean(this.selectedCourse);
 
             List<ApplicationItemBean> items = new ArrayList<>();
 
-            // 2. Raccolta dati Testuali
             for (Map.Entry<String, TextArea> entry : textInputMap.entrySet()) {
                 ApplicationItemBean item = new ApplicationItemBean();
                 item.setRequirementName(entry.getKey());
@@ -153,7 +151,6 @@ public class ApplicationFormFXController {
                 items.add(item);
             }
 
-            // 3. Raccolta dati Documentali
             for (Map.Entry<String, File> entry : fileInputMap.entrySet()) {
                 ApplicationItemBean item = new ApplicationItemBean();
                 item.setRequirementName(entry.getKey());
@@ -166,7 +163,6 @@ public class ApplicationFormFXController {
 
             appBean.setItems(items);
 
-            // 4. Invio al controller
             TokenBean token = Navigator.getInstance().getCurrentToken();
             if (token == null) {
                 showAlert(Alert.AlertType.ERROR, "Session Error", "You are not logged in.");
