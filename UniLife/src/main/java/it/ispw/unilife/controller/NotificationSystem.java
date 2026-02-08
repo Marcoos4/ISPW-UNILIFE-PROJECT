@@ -60,7 +60,7 @@ public class NotificationSystem implements Observer {
     }
 
     public ReservationBean resolveReservationNotification(NotificationBean notificationBean, TokenBean tokenBean) throws DAOException {
-        // Adattiamo la chiamata al nuovo metodo findNotificationModel che prende stringa
+
         Notification notification = findNotificationModel(tokenBean.getToken(), notificationBean);
 
         if (notification instanceof ReservationNotification resNotification) {
@@ -108,7 +108,7 @@ public class NotificationSystem implements Observer {
 
         ApplicationBean bean = new ApplicationBean();
 
-        // Il metodo principale è ora una semplice lista di operazioni
+
         mapBaseInfo(bean, application);
         mapStudent(bean, application);
         mapCourse(bean, application);
@@ -117,7 +117,7 @@ public class NotificationSystem implements Observer {
         return bean;
     }
 
-    // --- METODI HELPER (LOGICA ESTRATTA) ---
+
 
     private void mapBaseInfo(ApplicationBean bean, Application application) {
         if (application.getSubmissionDate() != null) {
@@ -169,9 +169,6 @@ public class NotificationSystem implements Observer {
         bean.setItems(itemBeans);
     }
 
-    /**
-     * Converte un singolo item (riduce la complessità dentro il ciclo for).
-     */
     private ApplicationItemBean convertSingleItem(ApplicationItem modelItem) {
         ApplicationItemBean itemBean = new ApplicationItemBean();
 
@@ -182,7 +179,6 @@ public class NotificationSystem implements Observer {
             itemBean.setType(modelItem.getType().toString());
         }
 
-        // Mappatura Documento estratta per pulizia
         if (modelItem.getDocumentContent() != null) {
             itemBean.setDocument(convertDocument(modelItem));
         }
@@ -192,7 +188,7 @@ public class NotificationSystem implements Observer {
 
     private DocumentBean convertDocument(ApplicationItem modelItem) {
         DocumentBean docBean = new DocumentBean();
-        // Assumiamo che getDocumentContent() non sia null qui perché controllato dal chiamante
+
         var docContent = modelItem.getDocumentContent();
 
         docBean.setFileName(docContent.getFileName());
@@ -277,8 +273,6 @@ public class NotificationSystem implements Observer {
         return "UNKNOWN";
     }
 
-    // --------- OBSERVER
-
     @Override
     public void update(Subject subject, Object arg, String token) throws DAOException {
 
@@ -296,7 +290,7 @@ public class NotificationSystem implements Observer {
     private void handleApplicationEvent(Application app, String eventType, String token) throws DAOException {
         if ("SUBMITTED".equals(eventType)) {
             LOGGER.info("Application SUBMITTED");
-            // 1. Application Creata -> Notifica tutti gli University Employee di quell'università
+
             List<User> employees = findEmployeesFromDAO(app.getCourse());
 
             for (User employee : employees) {
@@ -315,7 +309,7 @@ public class NotificationSystem implements Observer {
             }
 
         } else if ("EVALUATED".equals(eventType)) {
-            // 2. Application Valutata -> Notifica Studente
+
             Notification notif = new ApplicationNotification(
                     "Your application has been " + app.getStatus(),
                     manager.getSession(token).getUser(),
@@ -330,10 +324,10 @@ public class NotificationSystem implements Observer {
 
     private void handleLessonEvent(Lesson lesson, String eventType, String token) throws DAOException {
         if ("CREATED".equals(eventType)) {
-            // 4. Lezione Creata -> Notifica TUTTI gli University Employee
+
             List<User> allEmployees = getAllEmployees();
             for (User employee : allEmployees) {
-                // Nota: Dovresti creare la classe LessonNotification simile alle altre
+
                 Notification notif = new LessonNotification(
                         "New lesson available: " + lesson.getSubject(),
                         lesson.getTutor(),
@@ -343,7 +337,7 @@ public class NotificationSystem implements Observer {
             }
 
         } else if ("EVALUATED".equals(eventType)) {
-            // 2. Lezione Valutata -> Notifica Tutor
+
             Notification notif = new LessonNotification(
                     "Your Lesson has been " + lesson.getStatus(),
                     manager.getSession(token).getUser(),
@@ -359,7 +353,7 @@ public class NotificationSystem implements Observer {
     private void handleReservationEvent(Reservation res, String eventType, String token) throws DAOException {
         if ("CREATED".equals(eventType)) {
             LOGGER.info("Reservation CREATED");
-            // 5. Reservation Creata -> Notifica il Tutor
+
             Notification notif = new ReservationNotification(
                     "New reservation request from " + res.checkStudent().getUsername(),
                     res,
@@ -368,7 +362,7 @@ public class NotificationSystem implements Observer {
             notificationDAO.insert(notif, res.checkTutor());
 
         } else if ("UPDATED".equals(eventType)) {
-            // 6. Reservation Accettata/Rifiutata -> Notifica lo Studente
+
             Notification notif = new ReservationNotification(
                     "Your reservation has been " + res.getStatus(),
                     res,
@@ -382,7 +376,7 @@ public class NotificationSystem implements Observer {
     }
 
 
-    // ------ HELPER METHODS
+
 
     private List<User> findEmployeesFromDAO(Course course) throws DAOException {
 
