@@ -44,14 +44,37 @@ Java-based application following the **Model-View-Controller (MVC)** pattern.
 
 ## Getting Started
 
+### 1. Clone the repository
+
 ```bash
 git clone https://github.com/Marcoos4/ISPW-UNILIFE-PROJECT.git
 cd ISPW-UNILIFE-PROJECT
+```
+
+### 2. Set up the database
+
+Make sure MySQL or MariaDB is running, then import the schema:
+
+```bash
+mysql -u root -p < database/schema.sql
+```
+
+This will create the `unilife_db` database with all tables, indexes, foreign keys, and sample data. The sample data includes three demo users:
+
+| Username | Role | Password |
+|----------|------|----------|
+| `marco` | Student | `a` |
+| `lore` | Tutor | `a` |
+| `ale` | University Employee | `a` |
+
+If your MySQL instance uses a different host or port, update the database connection settings in the project configuration before launching.
+
+### 3. Build and run
+
+```bash
 mvn clean install
 mvn javafx:run
 ```
-
-Make sure a MySQL/MariaDB instance is running and the database credentials are configured before launching.
 
 ---
 
@@ -134,14 +157,37 @@ Applicazione Java basata sul pattern **Model-View-Controller (MVC)**.
 
 ## Installazione
 
+### 1. Clona il repository
+
 ```bash
 git clone https://github.com/Marcoos4/ISPW-UNILIFE-PROJECT.git
 cd ISPW-UNILIFE-PROJECT
+```
+
+### 2. Configura il database
+
+Assicurati che MySQL o MariaDB sia in esecuzione, poi importa lo schema:
+
+```bash
+mysql -u root -p < database/schema.sql
+```
+
+Questo creerà il database `unilife_db` con tutte le tabelle, indici, foreign key e dati di esempio. I dati di esempio includono tre utenti demo:
+
+| Username | Ruolo | Password |
+|----------|-------|----------|
+| `marco` | Studente | `a` |
+| `lore` | Tutor | `a` |
+| `ale` | Impiegato Universitario | `a` |
+
+Se la tua istanza MySQL usa un host o una porta diversi, aggiorna le impostazioni di connessione al database nella configurazione del progetto prima dell'avvio.
+
+### 3. Compila e avvia
+
+```bash
 mvn clean install
 mvn javafx:run
 ```
-
-Assicurati di avere un'istanza MySQL/MariaDB attiva e le credenziali del database configurate prima dell'avvio.
 
 ---
 
