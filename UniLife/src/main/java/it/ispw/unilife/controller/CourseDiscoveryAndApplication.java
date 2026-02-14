@@ -56,17 +56,18 @@ public class CourseDiscoveryAndApplication {
     }
 
     public List<CourseBean> searchCourseByName(CourseBean bean) {
-        if (bean == null || bean.getTitle() == null || bean.getTitle().isEmpty()) {
+        if (bean == null || bean.getTitle() == null || bean.getTitle().trim().isEmpty()) {
             return new ArrayList<>();
         }
+        String searchString = bean.getTitle().trim().toLowerCase();
 
-        String searchString = bean.getCourseType() != null ? bean.getCourseType().trim().toLowerCase() : "";
         List<CourseBean> resultList = new ArrayList<>();
 
         try {
             List<Course> allCourses = getCourseDAO().getAll();
             for (Course course : allCourses) {
                 if (course.getCourseTitle() == null) continue;
+
                 if (course.getCourseTitle().toLowerCase().contains(searchString)) {
                     resultList.add(convertCourseToBean(course));
                 }

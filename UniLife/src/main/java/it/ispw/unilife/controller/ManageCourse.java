@@ -89,6 +89,7 @@ public class ManageCourse {
                 try {
                     course.addTag(CourseTags.valueOf(tagName));
                 } catch (IllegalArgumentException e) {
+                    // ingore invalid tag
                 }
             }
         }

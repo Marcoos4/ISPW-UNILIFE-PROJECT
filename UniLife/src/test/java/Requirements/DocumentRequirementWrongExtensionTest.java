@@ -13,7 +13,7 @@ class DocumentRequirementWrongExtensionTest {
     @Test
     void testValidateDocumentWrongExtension() {
   
-        DocumentRequirement req = new DocumentRequirement("TRANSCRIPT", "Transcript", "Grades", "pdf", 10, true);
+        DocumentRequirement req = new DocumentRequirement("TRANSCRIPT", "TRANSCRIPT", "Grades", "pdf", 10, true);
 
         Document doc = new Document();
         doc.setFileType("png"); // Utente carica un PNG

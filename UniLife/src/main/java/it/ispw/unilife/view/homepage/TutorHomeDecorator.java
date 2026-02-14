@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 
+
 public class TutorHomeDecorator extends HomePageDecorator {
 
     private static final String BUTTON_STYLE = "-fx-background-color: #ff9933; -fx-text-fill: white; -fx-background-radius: 8; -fx-font-weight: bold;";
@@ -35,7 +36,7 @@ public class TutorHomeDecorator extends HomePageDecorator {
 
     @Override
     public void decorateHeader(HBox headerArea) {
-
+        // Never used
     }
 
     @Override
