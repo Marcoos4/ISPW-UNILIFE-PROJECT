@@ -13,7 +13,7 @@ public class StripeBoundary {
     private static final Logger logger = Logger.getLogger(StripeBoundary.class.getName());
 
     public StripeBoundary() {
-        Stripe.apiKey = "sk_test";
+        Stripe.apiKey = "sk_test_";
     }
 
     private PaymentIntentCreateParams setUpPayment(long amount, String currency, String paymentMethod) {

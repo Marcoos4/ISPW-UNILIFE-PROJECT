@@ -34,3 +34,4 @@ out/
 # Windows
 Thumbs.db
 ehthumbs.db
+.DS_Store

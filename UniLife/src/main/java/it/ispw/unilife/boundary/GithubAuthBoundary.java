@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 public class GithubAuthBoundary {
 
-    private static final String CLIENT_ID = "id";
-    private static final String CLIENT_SECRET = "secret";
+    private static final String CLIENT_ID = "";
+    private static final String CLIENT_SECRET = "";
 
     private static final String REDIRECT_URI = "http://localhost:8080/callback";
 

@@ -6,6 +6,8 @@ UniLife is a desktop application that connects students, tutors, and university 
 
 Built for the Software Engineering and Web Design course (A.Y. 2025–2026).
 
+![UniLife Screenshot](docs/images/screenshot_tutor.png)
+
 ---
 
 ## Overview
@@ -56,7 +58,7 @@ cd ISPW-UNILIFE-PROJECT
 Make sure MySQL or MariaDB is running, then import the schema:
 
 ```bash
-mysql -u root -p < database/schema.sql
+mysql -u root -p < database/unilife_db.sql
 ```
 
 This will create the `unilife_db` database with all tables, indexes, foreign keys, and sample data. The sample data includes three demo users:
@@ -100,7 +102,7 @@ Monitored via [SonarCloud](https://sonarcloud.io/project/overview?id=Marcoos4_IS
 
 ## Documentation
 
-The full project documentation includes: Software Requirement Specification, User Stories, Functional Requirements, Use Case / Class (BCE) / Activity / Sequence / State diagrams, and interactive storyboards made with [Penpot](https://penpot.app/).
+Full project documentation (SRS, Use Cases, UML diagrams, Storyboards) available [here](docs/ISPW_UniLife.pdf).
 
 ---
 
@@ -118,6 +120,8 @@ Lorenzo Cellitti · Marco Zirilli
 UniLife è un'applicazione desktop che mette in contatto studenti, tutor e personale universitario su un'unica piattaforma. Aiuta gli studenti a trovare il corso giusto, prenotare lezioni di tutoring e gestire le proprie candidature — offrendo allo stesso tempo a tutor e università gli strumenti di cui hanno bisogno.
 
 Sviluppata per il corso di Ingegneria del Software e Progettazione Web (A.A. 2025–2026).
+
+![UniLife Screenshot](docs/images/screenshot_tutor.png)
 
 ---
 
@@ -169,7 +173,7 @@ cd ISPW-UNILIFE-PROJECT
 Assicurati che MySQL o MariaDB sia in esecuzione, poi importa lo schema:
 
 ```bash
-mysql -u root -p < database/schema.sql
+mysql -u root -p < database/unilife_db.sql
 ```
 
 Questo creerà il database `unilife_db` con tutte le tabelle, indici, foreign key e dati di esempio. I dati di esempio includono tre utenti demo:
@@ -213,7 +217,7 @@ Monitorata tramite [SonarCloud](https://sonarcloud.io/project/overview?id=Marcoo
 
 ## Documentazione
 
-La documentazione completa include: Software Requirement Specification, User Stories, Requisiti Funzionali, diagrammi Use Case / Classi (BCE) / Attività / Sequenza / Stato, e storyboard interattivi realizzati con [Penpot](https://penpot.app/).
+La documentazione completa del progetto (SRS, Use Case, diagrammi UML, Storyboard) è disponibile [qui](docs/ISPW_UniLife.pdf).
 
 ---
 
